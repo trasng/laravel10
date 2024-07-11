@@ -20,6 +20,11 @@
                         {{ session('message') }}
                     </div>
                 @endif
+                @if (session()->has('error'))
+                    <div class="alert alert-danger m-2">
+                        {{ session('error') }}
+                    </div>
+                @endif
                 <div class="table-responsive">
                     <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
                         <div class="row">
