@@ -22,7 +22,7 @@ return new class extends Migration
             $table->integer('quantity');
             $table->text('description');
             $table->string('short_description');
-            $table->string('slug');
+            $table->string('slug')->unique();
             $table->timestamps();
         });
     }
