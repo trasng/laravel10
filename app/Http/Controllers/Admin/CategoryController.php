@@ -28,15 +28,12 @@ class CategoryController extends Controller
             'name' => $request->name,
             'slug' => Str::slug($request->name),
         ];
-
         try
         {
-
             DB::beginTransaction();
             Category::create($data);
             DB::commit();
             return redirect()->route('admin.categories.index')->with('message', 'Thêm danh mục thành công');
-
         }catch(\Exception $e){
 
             DB::rollBack();
@@ -48,41 +45,31 @@ class CategoryController extends Controller
     public function edit($id)
     {
         $data = Category::find($id);
-
         if (!$data) {
             return redirect()->route('admin.categories.index')->with('error', 'Danh mục không tồn tại');
         }
-
         return view('Admin.categories.update', compact('data'));
     }
 
     public function update(CategoryRequest $request, string $id)
     {
         $category = Category::find($id);
-
         if (!$category) {
             return redirect()->route('admin.categories.index')->with('error', 'Danh mục không tồn tại');
         }
-
         $data = [
             'name' => $request->name,
             'slug' => Str::slug($request->name),
         ];
-
         try {
-
             DB::beginTransaction();
             Category::where('id', $id)->update($data);
             DB::commit();
             return redirect()->route('admin.categories.index')->with('message', 'Cập nhật danh mục thành công!');
-
         } catch (\Exception $e) {
-
             DB::rollBack();
             return redirect()->route('admin.categories.index')->with('error', 'Cập nhật danh mục Thất bại!');
-
         }
-
     }
 
     public function destroy(string $id)
@@ -91,19 +78,14 @@ class CategoryController extends Controller
         if (!$category) {
             return redirect()->route('admin.categories.index')->with('error', 'Danh mục không tồn tại!');
         }
-
         try{
-
             DB::beginTransaction();
             $category->delete();
             DB::commit();
             return redirect()->route('admin.categories.index')->with('message', 'Xóa danh mục thành công!');
-
         }catch(\Exception $e){
-
             DB::rollBack();
             return redirect()->route('admin.categories.index')->with('message', 'Xóa danh mục thất bại!');
-
         }
     }
 
