@@ -18,7 +18,7 @@ return new class extends Migration
             $table->decimal('price', 10, 2);
             $table->date('expiry_date');
             $table->unsignedBigInteger('category_id');
-            $table->foreign('category_id')->references('id')->on('product_categories')->onDelete('cascade');
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
             $table->integer('quantity');
             $table->text('description');
             $table->string('short_description');
