@@ -13,7 +13,7 @@ class CategoryController extends Controller
     public function index()
     {
 
-        $data = Category::all();
+        $data = Category::select('id', 'name')->get();
         // dd($data);
         return view('Admin.categories.index', compact('data'));
     }
@@ -25,6 +25,7 @@ class CategoryController extends Controller
     public function store(CategoryRequest $request)
     {
         $data = $request->validated();
+
         $data['slug'] = Str::slug($data['name']);
         Category::create($data);
         return redirect()->route('admin.categories.index')->with('message', 'Thêm danh mục thành công');
@@ -32,7 +33,11 @@ class CategoryController extends Controller
 
     public function edit($id)
     {
+
         $data = Category::find($id);
+        if (!$data) {
+            return view('404');
+        }
         return view('Admin.categories.update', compact('data'));
     }
 
@@ -46,7 +51,10 @@ class CategoryController extends Controller
 
     public function destroy(string $id)
     {
-        Category::where('id', $id)->delete();
+        $data = Category::where('id', $id)->delete();
+        if (!$data) {
+            return view('404');
+        }
         return redirect()->route('admin.categories.index')->with('message', 'Xóa danh mục thành công');
     }
 
