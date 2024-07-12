@@ -11,8 +11,8 @@
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Danh sách categories</h6>
-                <a href="{{ route('admin.categories.create') }}" class="btn btn-primary">Tạo mới</a>
+                <h6 class="m-0 font-weight-bold text-primary">Danh sách users</h6>
+                <a href="{{ route('admin.users.create') }}" class="btn btn-primary">Tạo mới</a>
             </div>
             <div class="card-body">
                 @if (session()->has('message'))
@@ -32,7 +32,6 @@
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Name</th>
                                         <th>Image</th>
                                         <th>Action</th>
                                     </tr>
@@ -40,29 +39,27 @@
                                 <tfoot>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Name</th>
                                         <th>Image</th>
                                         <th>Action</th>
                                     </tr>
                                 </tfoot>
                                 <tbody>
 
-                                    @foreach ($data as $category)
+                                    @foreach ($data as $user)
 
                                         <tr>
-                                            <th>{{ $category->id }}</th>
-                                            <th>{{ $category->name }}</th>
+                                            <th>{{ $user->id }}</th>
                                             <th>
-                                                <img width="100" src="{{ asset($category->image) }}" alt="{{ $category->image }}">
+                                                <img width="100" src="{{ asset($user->image) }}" alt="{{ $user->image }}">
                                             </th>
                                             <th>
                                                 <a class="btn btn-warning"
-                                                    href="{{ route('admin.categories.update', $category->id) }}">
+                                                    href="{{ route('admin.users.update', $user->id) }}">
                                                     Update
                                                 </a>
                                                 <a class="btn btn-danger"
                                                     onclick="return confirm('Có chắc chắn xóa khônng!')"
-                                                    href="{{ route('admin.categories.delete', $category->id) }}">
+                                                    href="{{ route('admin.users.delete', $user->id) }}">
                                                     Delete
                                                 </a>
                                             </th>
