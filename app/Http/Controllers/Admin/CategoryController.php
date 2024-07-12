@@ -7,13 +7,14 @@ use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class CategoryController extends Controller
 {
     public function index()
     {
-
-        $data = Category::all();
+        $data = Category::select('id', 'name')->get();
         // dd($data);
         return view('Admin.categories.index', compact('data'));
     }
@@ -24,30 +25,71 @@ class CategoryController extends Controller
 
     public function store(CategoryRequest $request)
     {
-        $data = $request->validated();
-        $data['slug'] = Str::slug($data['name']);
-        Category::create($data);
-        return redirect()->route('admin.categories.index')->with('message', 'Thêm danh mục thành công');
+        try
+        {
+            $data = [
+                'name' => $request->name,
+                'slug' => Str::slug($request->name),
+            ];
+            DB::beginTransaction();
+            Category::create($data);
+            DB::commit();
+            return redirect()->route('admin.categories.index')->with('message', 'Thêm danh mục thành công');
+        }catch(\Exception $e){
+            DB::rollBack();
+            Log::error('message' . $e->getMessage() . 'line :' . $e->getLine());
+            return redirect()->route('admin.categories.index')->with('error', 'Thêm danh mục thất bại!');
+
+        }
     }
 
     public function edit($id)
     {
         $data = Category::find($id);
+        if (!$data) {
+            return redirect()->route('admin.categories.index')->with('error', 'Danh mục không tồn tại');
+        }
         return view('Admin.categories.update', compact('data'));
     }
 
     public function update(CategoryRequest $request, string $id)
     {
-        $data = $request->validated();
-        $data['slug'] = Str::slug($data['name']);
-        Category::where('id', $id)->update($data);
-        return redirect()->route('admin.categories.index')->with('message', 'Cập nhật danh mục thành công');
+        $category = Category::find($id);
+        if (!$category) {
+            return redirect()->route('admin.categories.index')->with('error', 'Danh mục không tồn tại');
+        }
+        try {
+            $data = [
+                'name' => $request->name,
+                'slug' => Str::slug($request->name),
+            ];
+            DB::beginTransaction();
+            Category::where('id', $id)->update($data);
+            DB::commit();
+            return redirect()->route('admin.categories.index')->with('message', 'Cập nhật danh mục thành công!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('message' . $e->getMessage() . 'line :' . $e->getLine());
+            return redirect()->route('admin.categories.index')->with('error', 'Cập nhật danh mục Thất bại!');
+        }
     }
 
     public function destroy(string $id)
     {
-        Category::where('id', $id)->delete();
-        return redirect()->route('admin.categories.index')->with('message', 'Xóa danh mục thành công');
+        $category = Category::find($id);
+        if (!$category) {
+            return redirect()->route('admin.categories.index')->with('error', 'Danh mục không tồn tại!');
+        }
+        try{
+            DB::beginTransaction();
+            $category->delete();
+            DB::commit();
+            return redirect()->route('admin.categories.index')->with('message', 'Xóa danh mục thành công!');
+        }catch(\Exception $e){
+            DB::rollBack();
+            Log::error('message' . $e->getMessage() . 'line :' . $e->getLine());
+            return redirect()->route('admin.categories.index')->with('message', 'Xóa danh mục thất bại!');
+        }
     }
 
 }

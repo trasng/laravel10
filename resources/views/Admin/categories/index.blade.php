@@ -12,12 +12,17 @@
         <div class="card shadow mb-4">
             <div class="card-header py-3">
                 <h6 class="m-0 font-weight-bold text-primary">Danh sách categories</h6>
-                <a href="{{ route('admin.categories.create') }}" class="btn btn-primary">Create</a>
+                <a href="{{ route('admin.categories.create') }}" class="btn btn-primary">Tạo mới</a>
             </div>
             <div class="card-body">
                 @if (session()->has('message'))
                     <div class="alert alert-success m-2">
                         {{ session('message') }}
+                    </div>
+                @endif
+                @if (session()->has('error'))
+                    <div class="alert alert-danger m-2">
+                        {{ session('error') }}
                     </div>
                 @endif
                 <div class="table-responsive">
