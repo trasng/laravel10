@@ -32,17 +32,17 @@
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Name</th>
-                                        <th>Image</th>
-                                        <th>Action</th>
+                                        <th>Tên</th>
+                                        <th>Ảnh</th>
+                                        <th>Hành động</th>
                                     </tr>
                                 </thead>
                                 <tfoot>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Name</th>
-                                        <th>Image</th>
-                                        <th>Action</th>
+                                        <th>Tên</th>
+                                        <th>Ảnh</th>
+                                        <th>Hành động</th>
                                     </tr>
                                 </tfoot>
                                 <tbody>

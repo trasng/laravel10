@@ -32,10 +32,12 @@ class CategoryController extends Controller
     {
         try
         {
+            $data = [];
             if ($request->hasFile('image')) {
                 $path = $request->image->store('category', 'public');
                 $data['image'] = Storage::url($path);
             }
+
             $data = [
                 'name' => $request->name,
                 'slug' => Str::slug($request->name),
@@ -46,7 +48,7 @@ class CategoryController extends Controller
             DB::commit();
             return redirect()->route('admin.categories.index')->with('message', 'Thêm danh mục thành công');
         }catch(\Exception $e){
-            if (File::exists(public_path($data['image']))) {
+            if (isset($data['image']) && File::exists(public_path($data['image']))) {
                 unlink(public_path($data['image']));
             }
             DB::rollBack();
@@ -71,6 +73,7 @@ class CategoryController extends Controller
             return redirect()->route('admin.categories.index')->with('error', 'Danh mục không tồn tại');
         }
         try {
+            $data = [];
             if ($request->hasFile('image')) {
                 $path = $request->image->store('category', 'public');
                 $data['image'] = Storage::url($path);
@@ -94,7 +97,7 @@ class CategoryController extends Controller
             DB::commit();
             return redirect()->route('admin.categories.index')->with('message', 'Cập nhật danh mục thành công!');
         } catch (\Exception $e) {
-            if (File::exists(public_path($data['image']))) {
+            if (isset($data['image']) && File::exists(public_path($data['image']))) {
                 unlink(public_path($data['image']));
             }
             DB::rollBack();

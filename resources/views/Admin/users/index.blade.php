@@ -32,26 +32,40 @@
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Image</th>
-                                        <th>Action</th>
+                                        <th>Họ</th>
+                                        <th>Tên</th>
+                                        <th>Ngày sinh</th>
+                                        <th>Ảnh đại diện</th>
+                                        <th>Số điện thoại</th>
+                                        <th>Email</th>
+                                        <th>Hành động</th>
                                     </tr>
                                 </thead>
                                 <tfoot>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Image</th>
-                                        <th>Action</th>
+                                        <th>Họ</th>
+                                        <th>Tên</th>
+                                        <th>Ngày sinh</th>
+                                        <th>Ảnh đại diện</th>
+                                        <th>Số điện thoại</th>
+                                        <th>Email</th>
+                                        <th>Hành động</th>
                                     </tr>
                                 </tfoot>
                                 <tbody>
-
                                     @foreach ($data as $user)
 
                                         <tr>
                                             <th>{{ $user->id }}</th>
+                                            <th>{{ $user->last_name }}</th>
+                                            <th>{{ $user->name }}</th>
+                                            <th>{{ $user->birth_date }}</th>
                                             <th>
                                                 <img width="100" src="{{ asset($user->image) }}" alt="{{ $user->image }}">
                                             </th>
+                                            <th>{{ $user->phone }}</th>
+                                            <th>{{ $user->email }}</th>
                                             <th>
                                                 <a class="btn btn-warning"
                                                     href="{{ route('admin.users.update', $user->id) }}">

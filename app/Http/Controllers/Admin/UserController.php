@@ -19,7 +19,7 @@ class UserController extends Controller
 {
     public function index()
     {
-        $data = User::select('id', 'name', 'image')->get();
+        $data = User::select('id', 'last_name','name', 'birth_date', 'phone', 'email', 'image')->get();
         // dd($data);
         return view('Admin.users.index', compact('data'));
     }
@@ -32,16 +32,25 @@ class UserController extends Controller
     {
         try
         {
+            $data = [];
             if ($request->hasFile('image')) {
                 $path = $request->image->store('user', 'public');
                 $data['image'] = Storage::url($path);
             }
+            $data = [
+                'last_name'  => $request->last_name,
+                'name'       => $request->name,
+                'birth_date' => $request->birth_date,
+                'image'      => $data['image'],
+                'phone'      => $request->phone,
+                'email'      => $request->email,
+            ];
             DB::beginTransaction();
             User::create($data);
             DB::commit();
             return redirect()->route('admin.users.index')->with('message', 'Thêm user thành công');
         }catch(\Exception $e){
-            if (File::exists(public_path($data['image']))) {
+            if (isset($data['image']) && File::exists(public_path($data['image']))) {
                 unlink(public_path($data['image']));
             }
             DB::rollBack();
@@ -66,13 +75,21 @@ class UserController extends Controller
             return redirect()->route('admin.categories.index')->with('error', 'User không tồn tại');
         }
         try {
+            $data = [];
             if ($request->hasFile('image')) {
                 $path = $request->image->store('user', 'public');
                 $data['image'] = Storage::url($path);
             }else{
                 $data['image'] = $user->image;
             }
-
+            $data = [
+                'last_name'  => $request->last_name,
+                'name'       => $request->name,
+                'birth_date' => $request->birth_date,
+                'image'      => $data['image'],
+                'phone'      => $request->phone,
+                'email'      => $request->email,
+            ];
             DB::beginTransaction();
             User::where('id', $id)->update($data);
             if ($request->hasFile('image')) {
@@ -85,7 +102,7 @@ class UserController extends Controller
             DB::commit();
             return redirect()->route('admin.users.index')->with('message', 'Cập nhật user thành công!');
         } catch (\Exception $e) {
-            if (File::exists(public_path($data['image']))) {
+            if (isset($data['image']) && File::exists(public_path($data['image']))) {
                 unlink(public_path($data['image']));
             }
             DB::rollBack();
