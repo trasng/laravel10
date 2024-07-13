@@ -45,7 +45,7 @@ class UserUpdateRequest extends FormRequest
             'birth_date.before_or_equal' => 'Ngày sinh không được lớn hơn ngày hiện tại!',
             'image.image' => 'Ảnh đại diện phải là một tệp hình ảnh hợp lệ!',
             'image.mimes' => 'Ảnh đại diện đại diện phải có định dạng: jpeg, png, jpg!',
-            'image.max' => 'Kích thước ảnh danh mục đại diện không được vượt quá 2MB!',
+            'image.max' => 'Kích thước ảnh đại diện không được vượt quá 2MB!',
             'phone.required' => 'Không được để trống số điện thoại!',
             'phone.string' => 'Số điện thoại phải là chuỗi!',
             'phone.min' => 'Số điện thoại phải có ít nhất 10 kí tự!',

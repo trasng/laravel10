@@ -20,6 +20,9 @@ class CategoryController extends Controller
     public function index()
     {
         $data = Category::select('id', 'name', 'image')->get();
+        if (!$data) {
+            return view('404');
+        }
         // dd($data);
         return view('Admin.categories.index', compact('data'));
     }
@@ -68,11 +71,11 @@ class CategoryController extends Controller
 
     public function update(CategoryUpdateRequest $request, string $id)
     {
-        $category = Category::find($id);
-        if (!$category) {
-            return redirect()->route('admin.categories.index')->with('error', 'Danh mục không tồn tại');
-        }
         try {
+            $category = Category::find($id);
+            if (!$category) {
+                return redirect()->route('admin.categories.index')->with('error', 'Danh mục không tồn tại');
+            }
             $data = [];
             if ($request->hasFile('image')) {
                 $path = $request->image->store('category', 'public');
@@ -108,11 +111,11 @@ class CategoryController extends Controller
 
     public function destroy(string $id)
     {
-        $category = Category::find($id);
-        if (!$category) {
-            return redirect()->route('admin.categories.index')->with('error', 'Danh mục không tồn tại!');
-        }
         try{
+            $category = Category::find($id);
+            if (!$category) {
+                return redirect()->route('admin.categories.index')->with('error', 'Danh mục không tồn tại!');
+            }
             DB::beginTransaction();
             $category->delete();
             if ($category->image) {

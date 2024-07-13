@@ -20,7 +20,9 @@ class UserController extends Controller
     public function index()
     {
         $data = User::select('id', 'last_name','name', 'birth_date', 'phone', 'email', 'image')->get();
-        // dd($data);
+        if (!$data) {
+            return view('404');
+        }
         return view('Admin.users.index', compact('data'));
     }
 
@@ -70,11 +72,11 @@ class UserController extends Controller
 
     public function update(UserUpdateRequest $request, string $id)
     {
-        $user = User::find($id);
-        if (!$user) {
-            return redirect()->route('admin.categories.index')->with('error', 'User không tồn tại');
-        }
         try {
+            $user = User::find($id);
+            if (!$user) {
+                return redirect()->route('admin.categories.index')->with('error', 'User không tồn tại');
+            }
             $data = [];
             if ($request->hasFile('image')) {
                 $path = $request->image->store('user', 'public');
@@ -113,11 +115,11 @@ class UserController extends Controller
 
     public function destroy(string $id)
     {
-        $user = User::find($id);
-        if (!$user) {
-            return redirect()->route('admin.users.index')->with('error', 'User không tồn tại!');
-        }
         try{
+            $user = User::find($id);
+            if (!$user) {
+                return redirect()->route('admin.users.index')->with('error', 'User không tồn tại!');
+            }
             DB::beginTransaction();
             $user->delete();
             if ($user->image) {
