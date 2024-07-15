@@ -11,8 +11,8 @@
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Danh sách categories</h6>
-                <a href="{{ route('admin.categories.create') }}" class="btn btn-primary">Tạo mới</a>
+                <h6 class="m-0 font-weight-bold text-primary">Danh sách users</h6>
+                <a href="{{ route('admin.users.create') }}" class="btn btn-primary">Tạo mới</a>
             </div>
             <div class="card-body">
                 @if (session()->has('message'))
@@ -32,37 +32,48 @@
                                 <thead>
                                     <tr>
                                         <th>ID</th>
+                                        <th>Họ</th>
                                         <th>Tên</th>
-                                        <th>Ảnh</th>
+                                        <th>Ngày sinh</th>
+                                        <th>Ảnh đại diện</th>
+                                        <th>Số điện thoại</th>
+                                        <th>Email</th>
                                         <th>Hành động</th>
                                     </tr>
                                 </thead>
                                 <tfoot>
                                     <tr>
                                         <th>ID</th>
+                                        <th>Họ</th>
                                         <th>Tên</th>
-                                        <th>Ảnh</th>
+                                        <th>Ngày sinh</th>
+                                        <th>Ảnh đại diện</th>
+                                        <th>Số điện thoại</th>
+                                        <th>Email</th>
                                         <th>Hành động</th>
                                     </tr>
                                 </tfoot>
                                 <tbody>
-
-                                    @foreach ($data as $category)
+                                    @foreach ($data as $user)
 
                                         <tr>
-                                            <th>{{ $category->id }}</th>
-                                            <th>{{ $category->name }}</th>
+                                            <th>{{ $user->id }}</th>
+                                            <th>{{ $user->last_name }}</th>
+                                            <th>{{ $user->name }}</th>
+                                            <th>{{ $user->birth_date }}</th>
                                             <th>
-                                                <img width="100" src="{{ asset($category->image) }}" alt="{{ $category->image }}">
+                                                <img width="100" src="{{ asset($user->image) }}" alt="{{ $user->image }}">
                                             </th>
+                                            <th>{{ $user->phone }}</th>
+                                            <th>{{ $user->email }}</th>
                                             <th>
                                                 <a class="btn btn-warning"
-                                                    href="{{ route('admin.categories.update', $category->id) }}">
+                                                    href="{{ route('admin.users.update', $user->id) }}">
                                                     Update
                                                 </a>
                                                 <a class="btn btn-danger"
                                                     onclick="return confirm('Có chắc chắn xóa khônng!')"
-                                                    href="{{ route('admin.categories.delete', $category->id) }}">
+                                                    href="{{ route('admin.users.delete', $user->id) }}">
                                                     Delete
                                                 </a>
                                             </th>
