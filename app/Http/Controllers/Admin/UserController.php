@@ -34,6 +34,7 @@ class UserController extends Controller
     {
         try
         {
+            DB::beginTransaction();
             $data = [];
             if ($request->hasFile('image')) {
                 $path = $request->image->store('user', 'public');
@@ -47,14 +48,13 @@ class UserController extends Controller
                 'phone'      => $request->phone,
                 'email'      => $request->email,
             ];
-            DB::beginTransaction();
             User::create($data);
             DB::commit();
             return redirect()->route('admin.users.index')->with('message', 'Thêm user thành công');
         }catch(\Exception $e){
-            if (isset($data['image']) && File::exists(public_path($data['image']))) {
-                unlink(public_path($data['image']));
-            }
+            // if (isset($data['image']) && File::exists(public_path($data['image']))) {
+            //     unlink(public_path($data['image']));
+            // }
             DB::rollBack();
             Log::error('message' . $e->getMessage() . 'line :' . $e->getLine());
             return redirect()->route('admin.users.index')->with('error', 'Thêm user thất bại!');
@@ -77,6 +77,7 @@ class UserController extends Controller
             if (!$user) {
                 return redirect()->route('admin.categories.index')->with('error', 'User không tồn tại');
             }
+            DB::beginTransaction();
             $data = [];
             if ($request->hasFile('image')) {
                 $path = $request->image->store('user', 'public');
@@ -92,7 +93,6 @@ class UserController extends Controller
                 'phone'      => $request->phone,
                 'email'      => $request->email,
             ];
-            DB::beginTransaction();
             User::where('id', $id)->update($data);
             if ($request->hasFile('image')) {
                 if ($user->image) {
@@ -104,9 +104,9 @@ class UserController extends Controller
             DB::commit();
             return redirect()->route('admin.users.index')->with('message', 'Cập nhật user thành công!');
         } catch (\Exception $e) {
-            if (isset($data['image']) && File::exists(public_path($data['image']))) {
-                unlink(public_path($data['image']));
-            }
+            // if (isset($data['image']) && File::exists(public_path($data['image']))) {
+            //     unlink(public_path($data['image']));
+            // }
             DB::rollBack();
             Log::error('message' . $e->getMessage() . 'line :' . $e->getLine());
             return redirect()->route('admin.users.index')->with('error', 'Cập nhật user Thất bại!');

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CategoryInsertRequest;
 use App\Http\Requests\CategoryRequest;
 use App\Http\Requests\CategoryUpdateRequest;
 use App\Models\Category;
@@ -31,29 +32,28 @@ class CategoryController extends Controller
         return view('Admin.categories.create');
     }
 
-    public function store(CategoryRequest $request)
+    public function store(CategoryInsertRequest $request)
     {
         try
         {
+            DB::beginTransaction();
             $data = [];
             if ($request->hasFile('image')) {
                 $path = $request->image->store('category', 'public');
                 $data['image'] = Storage::url($path);
             }
-
             $data = [
                 'name' => $request->name,
                 'slug' => Str::slug($request->name),
                 'image' => $data['image'],
             ];
-            DB::beginTransaction();
             Category::create($data);
             DB::commit();
             return redirect()->route('admin.categories.index')->with('message', 'Thêm danh mục thành công');
         }catch(\Exception $e){
-            if (isset($data['image']) && File::exists(public_path($data['image']))) {
-                unlink(public_path($data['image']));
-            }
+            // if (isset($data['image']) && File::exists(public_path($data['image']))) {
+            //     unlink(public_path($data['image']));
+            // }
             DB::rollBack();
             Log::error('message' . $e->getMessage() . 'line :' . $e->getLine());
             return redirect()->route('admin.categories.index')->with('error', 'Thêm danh mục thất bại!');
@@ -76,6 +76,7 @@ class CategoryController extends Controller
             if (!$category) {
                 return redirect()->route('admin.categories.index')->with('error', 'Danh mục không tồn tại');
             }
+            DB::beginTransaction();
             $data = [];
             if ($request->hasFile('image')) {
                 $path = $request->image->store('category', 'public');
@@ -88,7 +89,6 @@ class CategoryController extends Controller
                 'slug' => Str::slug($request->name),
                 'image' => $data['image'],
             ];
-            DB::beginTransaction();
             Category::where('id', $id)->update($data);
             if ($request->hasFile('image')) {
                 if ($category->image) {
@@ -100,9 +100,9 @@ class CategoryController extends Controller
             DB::commit();
             return redirect()->route('admin.categories.index')->with('message', 'Cập nhật danh mục thành công!');
         } catch (\Exception $e) {
-            if (isset($data['image']) && File::exists(public_path($data['image']))) {
-                unlink(public_path($data['image']));
-            }
+            // if (isset($data['image']) && File::exists(public_path($data['image']))) {
+            //     unlink(public_path($data['image']));
+            // }
             DB::rollBack();
             Log::error('message' . $e->getMessage() . 'line :' . $e->getLine());
             return redirect()->route('admin.categories.index')->with('error', 'Cập nhật danh mục Thất bại!');
